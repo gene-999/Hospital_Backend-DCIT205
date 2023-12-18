@@ -21,23 +21,21 @@ mongoose.connect('mongodb://localhost:27017')
 app.post('/add_patients', async (req, res) =>{
     let patient = new Patients(res.body);
     patient = await patient.save();
-    console.log('Hello');
-    console.log(res.body);
     res.status(200).send(patient.json());
 })
 
 app.post('/vitals_patients', async (req, res) =>{
     let patient = new Vitals(res.body);
-    patient = await patient.save();
-    console.log('Hello');
-    console.log(res.body)
     res.status(200).send(patient.json());
 })
 
 app.post('/visitation_patients', async (req, res) =>{
     let patient = new Vistation(res.body);
     patient = await patient.save();
-    console.log('Hello');
-    console.log(res.body)
     res.status(200).send(patient.json());
+})
+
+app.get('/patients',async (req, res) =>{
+    const patient = await Patient.find();
+    res.status(200).send(patient);
 })
