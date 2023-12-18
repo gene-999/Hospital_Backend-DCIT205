@@ -19,9 +19,17 @@ mongoose.connect('mongodb://localhost:27017')
 
 
 app.post('/add_patients', async (req, res) =>{
-    let patient = new Patients({patientID:123, surname: foo});
+    let patient = new Patients(res.body);
     patient = await patient.save();
     console.log('Hello');
-    res.status(200).send(patient);
+    console.log(res.body);
+    res.status(200).send(patient.json());
 })
 
+app.post('/vitals_patients', async (req, res) =>{
+    let patient = new Vitals(res.body);
+    patient = await patient.save();
+    console.log('Hello');
+    console.log(res.body)
+    res.status(200).send(patient.json());
+})
