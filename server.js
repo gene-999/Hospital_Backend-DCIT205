@@ -33,3 +33,11 @@ app.post('/vitals_patients', async (req, res) =>{
     console.log(res.body)
     res.status(200).send(patient.json());
 })
+
+app.post('/visitation_patients', async (req, res) =>{
+    let patient = new Vistation(res.body);
+    patient = await patient.save();
+    console.log('Hello');
+    console.log(res.body)
+    res.status(200).send(patient.json());
+})
