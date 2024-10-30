@@ -12,7 +12,7 @@ app.use(express.urlencoded({extended:false}))
 
 //Server
 
-mongoose.connect('mongodb://localhost:27017')
+mongoose.connect('mongodb://localhost:2707')
 .then(()=>{
     app.listen(3000)
 });
