@@ -12,37 +12,76 @@ app.use(express.urlencoded({extended:false}))
 
 //Server
 
-mongoose.connect('mongodb://localhost:27017')
+mongoose.connect('mongodb://localhost:2707')
 .then(()=>{
     app.listen(3000)
 });
 
 
 app.post('/add_patients', async (req, res) =>{
-    let patient = new Patients(res.body);
+    let patient = new Patients(req.body);
     patient = await patient.save();
-    res.status(200).send(patient.json());
+    res.status(201).json(patient);
 });
-
-app.post('/vitals_patients', async (req, res) =>{
-    let patient = new Vitals(res.body);
-    res.status(200).send(patient.json());
+app.get('/', async (req,res) =>{
+    let patient = await Vitals.find()
+    console.log(patient) 
+     res.status(200).json({mssg: "hgyhfjkh!!!"})
+    
+})
+app.post('/vitals_patients', async (req, res) => {
+    let patient = new Vitals(req.body);
+    patient = await patient.save();
+    res.status(200).send(patient);
 });
 
 app.post('/visitation_patients', async (req, res) =>{
-    let patient = new Vistation(res.body);
+    let patient = new Vistation(req.body);
     patient = await patient.save();
-    res.status(200).send(patient.json());
+    res.status(200).send(patient);
 });
 
 app.get('/patients',async (req, res) =>{
     const patient = await Patients.find();
-    res.status(200).send(patient);
+    console.log(patient);
+    res.status(200).json(patient);
 });
 
 
 app.get('/patients/:id',async (req, res) =>{
     const {id} = req.params
-    const patient = await Patients.find({id});
-    res.status(200).send(patient.json());
+    if(mongoose.isValidObjectId(id)){
+      const patient = await Patients.findById(id);
+    return res.status(200).send(patient);  
+    }
+    
+        res.status(404).json({err: "no patient found"}); 
+    
+    
 });
+
+app.put('/patients/:id', async (req, res) =>{
+    const {id} = req.params
+    if(mongoose.isValidObjectId(id)){
+        const patient = await Patients
+        .findById({ _id: id})
+        .updateOne(req.body)
+        .exec();
+        return res.status(200).json(patient);
+    }
+    res.status(404).json({err: "no patient found"});
+}
+);
+
+app.delete('/patients/:id', async (req, res) =>{
+    const {id} = req.params
+    if(mongoose.isValidObjectId(id)){
+        const patient = await Patients
+        .findById({ _id: id})
+        .deleteOne()
+        .exec();
+        return res.status(200).json(patient);
+    }
+    res.status(404).json({err: "no patient found"});
+}
+);
